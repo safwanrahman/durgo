@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    image: durgo/web:latest
+    volumes:
+      - ./:/app/
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=foo
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/durgo
+    depends_on:
+      - postgres
+    command: python3 manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=durgo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
